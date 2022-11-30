@@ -99,7 +99,7 @@ class DatabaseService {
   Future toggleGroupJoin(
       String groupId, String userName, String groupName) async {
     DocumentReference userDocumentReference = userCollection.doc(uid);
-    DocumentReference groupDocumentReference = userCollection.doc(groupId);
+    DocumentReference groupDocumentReference = groupCollection.doc(groupId);
 
     DocumentSnapshot documentSnapshot = await userDocumentReference.get();
     List<dynamic> groups = await documentSnapshot['groups'];
@@ -120,5 +120,15 @@ class DatabaseService {
         "members": FieldValue.arrayUnion(["${uid}_$userName"]),
       });
     }
+  }
+
+  //send message
+  sendMessage(String groupId, Map<String, dynamic> chatMessageData) async {
+    groupCollection.doc(groupId).collection("messages").add(chatMessageData);
+    groupCollection.doc(groupId).update({
+      "recentMessage": chatMessageData['message'],
+      "recentMessageSender": chatMessageData['sender'],
+      "recentMessageTime": chatMessageData['time'].toString(),
+    });
   }
 }

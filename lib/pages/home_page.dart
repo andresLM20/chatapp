@@ -147,6 +147,7 @@ class _HomePageState extends State<HomePage> {
                             IconButton(
                                 onPressed: () async {
                                   await authService.signOut();
+                                  FirebaseAuth.instance.signOut();
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                           builder: (context) =>

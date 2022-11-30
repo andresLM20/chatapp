@@ -6,9 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../helper/helper_function.dart';
 import '../home_page.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -141,7 +142,38 @@ class _LoginPageState extends State<LoginPage> {
                                     ..onTap = () {
                                       nextScreen(context, const RegisterPage());
                                     })
-                            ]))
+                            ])),
+                        Positioned(
+                          child: Container(
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                FloatingActionButton(
+                                  child: Icon(FontAwesomeIcons.google),
+                                  onPressed: () {
+                                    singInWithGoogle();
+                                  },
+                                ),
+                                FloatingActionButton(
+                                  backgroundColor:
+                                      Color.fromARGB(0, 59, 89, 1520),
+                                  child: Icon(FontAwesomeIcons.facebook),
+                                  onPressed: () {
+                                    //login();
+                                  },
+                                ),
+                                FloatingActionButton(
+                                  backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                                  child: Icon(FontAwesomeIcons.github),
+                                  onPressed: () {
+                                    //login();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -176,5 +208,18 @@ class _LoginPageState extends State<LoginPage> {
         }
       });
     }
+  }
+
+  singInWithGoogle() async {
+    final GoogleSignInAccount? gooleUser =
+        await GoogleSignIn(scopes: <String>["email"]).signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await gooleUser!.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
