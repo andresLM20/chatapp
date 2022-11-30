@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w400),
                         ),
-                        Image.asset("assets/login.png"),
+                        Image.asset("assets/login2.png"),
                         TextFormField(
                           decoration: textInputDecoration.copyWith(
                             labelText: "Correo",
@@ -143,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                                       nextScreen(context, const RegisterPage());
                                     })
                             ])),
-                        Positioned(
+                        /* Positioned(
                           child: Container(
                             width: 200,
                             child: Row(
@@ -173,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                           ),
-                        ),
+                        ), */
                       ],
                     ),
                   ),
