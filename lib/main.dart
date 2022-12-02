@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:chatapp_firebase/helper/helper_function.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
+import 'package:chatapp_firebase/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -48,12 +50,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  ThemeProvider themeChangeProvider = new ThemeProvider();
   bool _isSignedIn = false;
 
   @override
   void initState() {
     super.initState();
     getUserLoggedInStatus();
+    getCurrentAppTheme();
+  }
+
+  void getCurrentAppTheme() async {
+    themeChangeProvider.setTheme =
+        await themeChangeProvider.themePreference.getTheme();
   }
 
   void getUserLoggedInStatus() async {
@@ -68,13 +77,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Constants().primaryColor,
-        scaffoldBackgroundColor: Colors.white,
+    return ChangeNotifierProvider.value(
+      value: themeChangeProvider,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: _isSignedIn ? const HomePage() : const LoginPage(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: _isSignedIn ? const HomePage() : const LoginPage(),
     );
   }
 }

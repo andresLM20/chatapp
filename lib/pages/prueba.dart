@@ -4,15 +4,16 @@ import 'package:chatapp_firebase/pages/auth/profile_page.dart';
 import 'package:chatapp_firebase/pages/search_page.dart';
 import 'package:chatapp_firebase/service/auth_service.dart';
 import 'package:chatapp_firebase/service/database_service.dart';
+import 'package:chatapp_firebase/settings/styles_settings.dart';
 import 'package:chatapp_firebase/widgets/group_tile.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:chatapp_firebase/provider/theme_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:chatapp_firebase/settings/styles_settings.dart';
+import 'package:provider/provider.dart';
+import 'package:chatapp_firebase/provider/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -118,10 +119,9 @@ class _HomePageState extends State<HomePage> {
           title: Text(
             "Groups",
             style: TextStyle(
-              color: currentTheme.isDarkTheme() ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 27,
-            ),
+                color: currentTheme.isDarkTheme() ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 27),
           ),
         ),
         drawer: Drawer(
@@ -130,15 +130,14 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             padding: const EdgeInsets.symmetric(vertical: 50),
             children: <Widget>[
-              Icon(Icons.account_circle, size: 150, color: Colors.grey),
+              Icon(Icons.account_circle,
+                  size: 150,
+                  color:
+                      currentTheme.isDarkTheme() ? Colors.white : Colors.black),
               Text(
                 userName,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: currentTheme.isDarkTheme()
-                        ? Colors.white
-                        : Colors.black),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 30,
@@ -175,9 +174,10 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   "Perfil",
                   style: TextStyle(
-                      color: currentTheme.isDarkTheme()
-                          ? Colors.white
-                          : Colors.black),
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                 ),
               ),
               ListTile(
@@ -223,9 +223,10 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   "Cerrar sesión",
                   style: TextStyle(
-                      color: currentTheme.isDarkTheme()
-                          ? Colors.white
-                          : Colors.black),
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                 ),
               ),
               SizedBox(
@@ -261,17 +262,16 @@ class _HomePageState extends State<HomePage> {
               popUpDialog(context);
             },
             elevation: 0,
-            //backgroundColor:
-            //  currentTheme.isDarkTheme() ? Colors.white : Colors.black,
+            backgroundColor:
+                currentTheme.isDarkTheme() ? Color(0xff2a293d) : Colors.white,
             child: Icon(Icons.add,
-                //color: currentTheme.isDarkTheme() ? Colors.white : Colors.black,
+                color: currentTheme.isDarkTheme() ? Colors.white : Colors.black,
                 size: 30)),
       ),
     );
   }
 
   popUpDialog(BuildContext context) {
-    final currentTheme = Provider.of<ThemeProvider>(context);
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -294,10 +294,7 @@ class _HomePageState extends State<HomePage> {
                             groupName = val;
                           });
                         },
-                        style: TextStyle(
-                            color: currentTheme.isDarkTheme()
-                                ? Colors.white
-                                : Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(

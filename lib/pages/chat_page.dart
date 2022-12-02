@@ -4,6 +4,9 @@ import 'package:chatapp_firebase/widgets/message_tile.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:chatapp_firebase/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:chatapp_firebase/settings/styles_settings.dart';
 
 class ChatPage extends StatefulWidget {
   final String groupId;
@@ -44,12 +47,18 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      backgroundColor: currentTheme.isDarkTheme()
+          ? Colors.black12
+          : Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
+        backgroundColor: currentTheme.isDarkTheme()
+            ? Colors.black12
+            : Theme.of(context).primaryColor,
         centerTitle: true,
         elevation: 0,
         title: Text(widget.groupName),
-        backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
               onPressed: () {
@@ -81,10 +90,17 @@ class _ChatPageState extends State<ChatPage> {
                     Expanded(
                         child: TextFormField(
                       controller: messageController,
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: currentTheme.isDarkTheme()
+                              ? Colors.black
+                              : Colors.white),
                       decoration: InputDecoration(
                         hintText: "Envía un mensaje...",
-                        hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+                        hintStyle: TextStyle(
+                            color: currentTheme.isDarkTheme()
+                                ? Colors.white
+                                : Colors.white,
+                            fontSize: 16),
                         border: InputBorder.none,
                       ),
                     )),
@@ -100,7 +116,7 @@ class _ChatPageState extends State<ChatPage> {
                           color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Center(
+                        child: Center(
                             child: Icon(Icons.send, color: Colors.white)),
                       ),
                     )

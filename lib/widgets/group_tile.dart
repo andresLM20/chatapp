@@ -1,6 +1,9 @@
 import 'package:chatapp_firebase/pages/chat_page.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:chatapp_firebase/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:chatapp_firebase/settings/styles_settings.dart';
 
 class GroupTile extends StatefulWidget {
   final String userName;
@@ -20,6 +23,7 @@ class GroupTile extends StatefulWidget {
 class _GroupTileState extends State<GroupTile> {
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () {
         nextScreen(
@@ -44,10 +48,15 @@ class _GroupTileState extends State<GroupTile> {
             ),
           ),
           title: Text(widget.groupName,
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(
+                  color:
+                      currentTheme.isDarkTheme() ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold)),
           subtitle: Text(
             "Únete a la conversación como ${widget.userName}",
-            style: const TextStyle(fontSize: 12),
+            style: TextStyle(
+                color: currentTheme.isDarkTheme() ? Colors.white : Colors.black,
+                fontSize: 12),
           ),
         ),
       ),

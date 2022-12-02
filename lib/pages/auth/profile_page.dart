@@ -2,6 +2,9 @@ import 'package:chatapp_firebase/pages/home_page.dart';
 import 'package:chatapp_firebase/service/auth_service.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:chatapp_firebase/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:chatapp_firebase/settings/styles_settings.dart';
 
 import 'login_page.dart';
 
@@ -19,9 +22,15 @@ class _ProfilePageState extends State<ProfilePage> {
   AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      backgroundColor: currentTheme.isDarkTheme()
+          ? Colors.black12
+          : Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: currentTheme.isDarkTheme()
+            ? Colors.black12
+            : Theme.of(context).primaryColor,
         elevation: 0,
         title: const Text("Perfil",
             style: TextStyle(
@@ -50,9 +59,12 @@ class _ProfilePageState extends State<ProfilePage> {
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               leading: const Icon(Icons.group),
-              title: const Text(
+              title: Text(
                 "Mis grupos",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white
+                        : Colors.black),
               ),
             ),
             ListTile(
@@ -61,9 +73,12 @@ class _ProfilePageState extends State<ProfilePage> {
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               leading: const Icon(Icons.group),
-              title: const Text(
+              title: Text(
                 "Perfil",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white
+                        : Colors.black),
               ),
             ),
             ListTile(
@@ -105,11 +120,37 @@ class _ProfilePageState extends State<ProfilePage> {
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               leading: const Icon(Icons.exit_to_app),
-              title: const Text(
+              title: Text(
                 "Cerrar sesión",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white
+                        : Colors.black),
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Icon(Icons.wb_sunny,
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white
+                        : Colors.black),
+                Switch(
+                    value: currentTheme.isDarkTheme(),
+                    onChanged: (value) {
+                      String newTheme =
+                          value ? ThemePreference.DARK : ThemePreference.LIGHT;
+                      currentTheme.setTheme = newTheme;
+                    }),
+                Icon(Icons.brightness_2,
+                    color: currentTheme.isDarkTheme()
+                        ? Colors.white
+                        : Colors.black)
+              ],
+            )
           ],
         ),
       ),
@@ -127,8 +168,18 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Nombre: ", style: TextStyle(fontSize: 17)),
-              Text(widget.userName, style: TextStyle(fontSize: 17))
+              Text("Nombre: ",
+                  style: TextStyle(
+                      color: currentTheme.isDarkTheme()
+                          ? Colors.white
+                          : Colors.black,
+                      fontSize: 17)),
+              Text(widget.userName,
+                  style: TextStyle(
+                      color: currentTheme.isDarkTheme()
+                          ? Colors.white
+                          : Colors.black,
+                      fontSize: 17))
             ],
           ),
           Divider(
@@ -137,8 +188,18 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Email: ", style: TextStyle(fontSize: 17)),
-              Text(widget.email, style: TextStyle(fontSize: 17))
+              Text("Email: ",
+                  style: TextStyle(
+                      color: currentTheme.isDarkTheme()
+                          ? Colors.white
+                          : Colors.black,
+                      fontSize: 17)),
+              Text(widget.email,
+                  style: TextStyle(
+                      color: currentTheme.isDarkTheme()
+                          ? Colors.white
+                          : Colors.black,
+                      fontSize: 17))
             ],
           ),
         ]),
