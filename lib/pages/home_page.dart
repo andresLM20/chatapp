@@ -7,7 +7,9 @@ import 'package:chatapp_firebase/service/database_service.dart';
 import 'package:chatapp_firebase/widgets/group_tile.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,11 +26,39 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   String groupName = "";
 
+  Future<void> setupInteractedMessage() async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ProfilePage(email: email, userName: userName)));
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+    init();
     super.initState();
     gettingUserData();
+  }
+
+  init() async {
+    String deviceToken = await getDeviceToken();
+    print("########### PRINT DEVICE TOKEN");
+    print(deviceToken);
+    print("########################");
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage mensaje) {
+      String? title = mensaje.notification!.title;
+      String? description = mensaje.notification!.body;
+
+      nextScreen(context, ProfilePage(email: email, userName: userName));
+      print("ABRIENDO PERFIL!!!!!!!!!!!!");
+    });
   }
 
   //string manipulation
@@ -319,5 +349,11 @@ class _HomePageState extends State<HomePage> {
             )
           ]),
     );
+  }
+
+  Future getDeviceToken() async {
+    FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
+    String? deviceToken = await _firebaseMessage.getToken();
+    return (deviceToken == null) ? "" : deviceToken;
   }
 }
