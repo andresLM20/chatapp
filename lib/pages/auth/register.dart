@@ -1,5 +1,6 @@
 import 'package:chatapp_firebase/helper/helper_function.dart';
 import 'package:chatapp_firebase/pages/auth/login_page.dart';
+import 'package:chatapp_firebase/pages/auth/verify_email_page.dart';
 import 'package:chatapp_firebase/pages/home_page.dart';
 import 'package:chatapp_firebase/pages/onboarding.dart';
 import 'package:chatapp_firebase/service/auth_service.dart';
@@ -181,6 +182,8 @@ class _RegisterPageState extends State<RegisterPage> {
           .registerUserWithEmailAndPassword(fullname, email, password)
           .then((value) async {
         if (value == true) {
+          nextScreenReplace(context, VerifyEmailPage());
+
           //saving the shared preference state
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email);

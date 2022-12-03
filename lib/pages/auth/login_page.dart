@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../helper/helper_function.dart';
 import '../home_page.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             : SingleChildScrollView(
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
                   child: Form(
                     key: formKey,
                     child: Column(
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         const Text(
-                          "MessenGroup",
+                          "ChatsGroup!",
                           style: TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold),
                         ),
@@ -143,37 +144,43 @@ class _LoginPageState extends State<LoginPage> {
                                       nextScreen(context, const RegisterPage());
                                     })
                             ])),
-                        /* Positioned(
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Container(
                           child: Container(
                             width: 200,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 FloatingActionButton(
+                                  heroTag: Text("btn1"),
                                   child: Icon(FontAwesomeIcons.google),
                                   onPressed: () {
                                     singInWithGoogle();
                                   },
                                 ),
                                 FloatingActionButton(
+                                  heroTag: Text("btn2"),
                                   backgroundColor:
-                                      Color.fromARGB(0, 59, 89, 1520),
+                                      Color.fromARGB(0, 74, 95, 255),
                                   child: Icon(FontAwesomeIcons.facebook),
                                   onPressed: () {
-                                    //login();
+                                    singInWithFacebook();
                                   },
                                 ),
                                 FloatingActionButton(
+                                  heroTag: Text("btn3"),
                                   backgroundColor: Color.fromARGB(255, 0, 0, 0),
                                   child: Icon(FontAwesomeIcons.github),
                                   onPressed: () {
-                                    //login();
+                                    singInWithGitHub();
                                   },
                                 ),
                               ],
                             ),
                           ),
-                        ), */
+                        ),
                       ],
                     ),
                   ),
@@ -211,6 +218,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   singInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final CollectionReference userCollection =
+        FirebaseFirestore.instance.collection("users");
     final GoogleSignInAccount? gooleUser =
         await GoogleSignIn(scopes: <String>["email"]).signIn();
     final GoogleSignInAuthentication googleAuth =
@@ -220,6 +232,35 @@ class _LoginPageState extends State<LoginPage> {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    print("ANTES DEL REGISTER");
+    print(FirebaseAuth.instance.currentUser!.displayName!);
+    print(FirebaseAuth.instance.currentUser!.email!);
+    await authService
+        .savingDataWithGoogle(FirebaseAuth.instance.currentUser!.displayName!,
+            FirebaseAuth.instance.currentUser!.email!)
+        .then((value) async {
+      if (value == true) {
+        print("DESPUÉS DEL REGISTER");
+        await HelperFunctions.saveUserLoggedInStatus(true);
+        await HelperFunctions.saveUserEmailSF(
+            FirebaseAuth.instance.currentUser!.email!);
+        await HelperFunctions.saveUserNameSF(
+            FirebaseAuth.instance.currentUser!.displayName!);
+        print("GUARDA VARIABLES");
+        SharedPreferences sf = await SharedPreferences.getInstance();
+        sf.setString("googlesignin", "true");
+        nextScreenReplace(context, const HomePage());
+      } else {
+        showSnackBar(context, Colors.red, value);
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
   }
+
+  singInWithFacebook() async {}
+
+  singInWithGitHub() async {}
 }

@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:chatapp_firebase/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:chatapp_firebase/settings/styles_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,6 +23,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser!;
+  String? googlesignin = "";
   String userName = "";
   String email = "";
   AuthService authService = AuthService();
@@ -43,7 +46,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     init();
     super.initState();
     gettingUserData();
@@ -92,8 +94,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future importShared() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    googlesignin = sf.getString('googlesignin');
+  }
+
   @override
   Widget build(BuildContext context) {
+    importShared();
     final currentTheme = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -130,7 +138,12 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             padding: const EdgeInsets.symmetric(vertical: 50),
             children: <Widget>[
-              Icon(Icons.account_circle, size: 150, color: Colors.grey),
+              CircleAvatar(
+                  radius: 90,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: googlesignin == "true"
+                      ? NetworkImage(user.photoURL!)
+                      : AssetImage('assets/person.png') as ImageProvider),
               Text(
                 userName,
                 textAlign: TextAlign.center,
@@ -203,6 +216,9 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () async {
                                   await authService.signOut();
                                   FirebaseAuth.instance.signOut();
+                                  SharedPreferences sf =
+                                      await SharedPreferences.getInstance();
+                                  sf.setString("googlesignin", "false");
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                           builder: (context) =>
@@ -271,7 +287,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   popUpDialog(BuildContext context) {
-    final currentTheme = Provider.of<ThemeProvider>(context);
+    final currentTheme = Provider.of<ThemeProvider>(context, listen: false);
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -296,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         style: TextStyle(
                             color: currentTheme.isDarkTheme()
-                                ? Colors.white
+                                ? Colors.black
                                 : Colors.black),
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -383,6 +399,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   noGroupWidget() {
+    final currentTheme = Provider.of<ThemeProvider>(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
@@ -402,9 +419,12 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 20,
             ),
-            const Text(
+            Text(
               "No te has unido a ningún grupo, toca + para crear un grupo o puedes buscar alguno al que te puedas unir.",
               textAlign: TextAlign.center,
+              style: TextStyle(
+                  color:
+                      currentTheme.isDarkTheme() ? Colors.white : Colors.black),
             )
           ]),
     );
