@@ -182,13 +182,13 @@ class _RegisterPageState extends State<RegisterPage> {
           .registerUserWithEmailAndPassword(fullname, email, password)
           .then((value) async {
         if (value == true) {
-          nextScreenReplace(context, VerifyEmailPage());
+          nextScreenReplace(context, OnBoardingScreen());
 
           //saving the shared preference state
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(fullname);
-          nextScreenReplace(context, const OnBoardingScreen());
+          //nextScreenReplace(context, const OnBoardingScreen());
         } else {
           showSnackBar(context, Colors.red, value);
           setState(() {

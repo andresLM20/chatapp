@@ -1,4 +1,5 @@
 import 'package:chatapp_firebase/pages/home_page.dart';
+import 'package:chatapp_firebase/pages/onboarding.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? HomePage()
+      ? OnBoardingScreen()
       : Scaffold(
           appBar: AppBar(
             title: Text("Verify Email"),

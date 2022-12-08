@@ -1,4 +1,5 @@
 import 'package:chatapp_firebase/pages/auth/register.dart';
+import 'package:chatapp_firebase/pages/onboarding.dart';
 import 'package:chatapp_firebase/service/auth_service.dart';
 import 'package:chatapp_firebase/service/database_service.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
@@ -206,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullname']);
 
-          nextScreenReplace(context, const HomePage());
+          nextScreenReplace(context, const OnBoardingScreen());
         } else {
           showSnackBar(context, Colors.red, value);
           setState(() {

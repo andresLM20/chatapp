@@ -57,7 +57,9 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             CircleAvatar(
                 radius: 90,
-                backgroundColor: Colors.transparent,
+                backgroundColor: currentTheme.isDarkTheme()
+                    ? Color(0xff2a293d)
+                    : Colors.white,
                 backgroundImage: googlesignin == "true"
                     ? NetworkImage(user.photoURL!)
                     : AssetImage('assets/person.png') as ImageProvider),
@@ -152,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         : Colors.black),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -206,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontSize: 17))
             ],
           ),
-          Divider(
+          const Divider(
             height: 20,
           ),
           Row(

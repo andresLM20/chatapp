@@ -136,13 +136,17 @@ class _SearchPageState extends State<SearchPage> {
 
   joinedOrNot(
       String userName, String groupId, String groupName, String admin) async {
-    await DatabaseService(uid: user!.uid)
-        .isUserJoined(groupName, groupId, userName)
-        .then((value) {
-      setState(() {
-        isJoined = value;
+    try {
+      await DatabaseService(uid: user!.uid)
+          .isUserJoined(groupName, groupId, userName)
+          .then((value) {
+        setState(() {
+          isJoined = value;
+        });
       });
-    });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget groupTile(
